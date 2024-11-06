@@ -4,6 +4,7 @@
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../../../config/apiConfig';
 
 type Dieta = {
     id: number;
@@ -18,7 +19,7 @@ const ListaDietas: React.FC = () => {
     useEffect(() => {
         const fetchDietas = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/api/dietas/', {
+                const response = await axios.get(`${API_BASE_URL}/api/dietas/`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('authToken')}`
                     },

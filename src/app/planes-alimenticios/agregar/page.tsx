@@ -1,11 +1,10 @@
-// src/app/planes-alimenticios/agregar/page.tsx
 "use client";
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { API_BASE_URL } from '../../../config/apiConfig'; // Importa la configuración de API
 
-// Define el tipo para Dieta
 type Dieta = {
     id: number;
     nombre: string;
@@ -23,7 +22,7 @@ const AgregarPlanAlimenticio: React.FC = () => {
         const fetchDietas = async () => {
             const token = localStorage.getItem('authToken');
             try {
-                const response = await axios.get('http://localhost:8000/api/dietas/', {
+                const response = await axios.get(`${API_BASE_URL}/dietas/`, { // Usa la URL de la API
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -41,11 +40,11 @@ const AgregarPlanAlimenticio: React.FC = () => {
         e.preventDefault();
         const token = localStorage.getItem('authToken');
         try {
-            await axios.post('http://localhost:8000/api/planes-alimenticios/agregar/', {
+            await axios.post(`${API_BASE_URL}/planes-alimenticios/agregar/`, { // Usa la URL de la API
                 nombre,
                 descripcion,
                 dieta: selectedDieta,
-                fecha_inicio: fechaInicio, // Asegúrate de enviar la fecha
+                fecha_inicio: fechaInicio,
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`,

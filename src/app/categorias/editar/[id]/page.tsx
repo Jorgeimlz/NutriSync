@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
+import { API_BASE_URL } from '../../../../config/apiConfig';
 
 const EditarCategoria: React.FC = () => {
   const [nombre, setNombre] = useState('');
@@ -15,7 +16,7 @@ const EditarCategoria: React.FC = () => {
       if (id) {
         const token = localStorage.getItem('authToken');
         try {
-          const response = await axios.get(`http://127.0.0.1:8000/categorias/api/${id}/`, {
+          const response = await axios.get(`${API_BASE_URL}/categorias/api/${id}/`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -36,7 +37,7 @@ const EditarCategoria: React.FC = () => {
     const token = localStorage.getItem('authToken');
 
     try {
-      await axios.put(`http://127.0.0.1:8000/categorias/api/${id}/`, {
+      await axios.put(`${API_BASE_URL}/categorias/api/${id}/`, {
         nombre,
       }, {
         headers: {

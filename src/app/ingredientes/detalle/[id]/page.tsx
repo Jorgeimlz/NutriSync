@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
+import { API_BASE_URL } from '../../../../config/apiConfig';
 
 interface Ingrediente {
   id: number;
@@ -23,7 +24,7 @@ const DetalleIngrediente: React.FC = () => {
       if (id) {
         const token = localStorage.getItem('authToken');
         try {
-          const response = await axios.get<Ingrediente>(`http://127.0.0.1:8000/ingredientes/api/ingredientes/${id}/`, {
+          const response = await axios.get<Ingrediente>(`${API_BASE_URL}/ingredientes/api/ingredientes/${id}/`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },

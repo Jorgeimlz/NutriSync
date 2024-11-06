@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { API_BASE_URL } from '../../../config/apiConfig';
 
 const AgregarCategoria: React.FC = () => {
   const [nombre, setNombre] = useState('');
@@ -13,7 +14,7 @@ const AgregarCategoria: React.FC = () => {
     const token = localStorage.getItem('authToken');
 
     try {
-      await axios.post('http://127.0.0.1:8000/categorias/api/crear/', {
+      await axios.post(`${API_BASE_URL}/categorias/api/crear/`, {
         nombre,
       }, {
         headers: {

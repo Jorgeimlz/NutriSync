@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { API_BASE_URL } from '../../../config/apiConfig';
 
 interface Categoria {
   id: number;
@@ -18,7 +19,7 @@ const ListaCategorias: React.FC = () => {
     const fetchCategorias = async () => {
       const token = localStorage.getItem('authToken');
       try {
-        const response = await axios.get<Categoria[]>('http://127.0.0.1:8000/categorias/api/', {
+        const response = await axios.get<Categoria[]>(`${API_BASE_URL}/categorias/api/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

@@ -20,6 +20,9 @@ type User = {
   dietary_goal?: string;
 };
 
+// Obtener la URL base desde las variables de entorno
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
+
 const AdminPage: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -34,7 +37,7 @@ const AdminPage: React.FC = () => {
       }
 
       try {
-        const response = await axios.get('http://localhost:8000/api/users/check-admin/', {
+        const response = await axios.get(`${API_BASE_URL}/api/users/check-admin/`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -55,7 +58,7 @@ const AdminPage: React.FC = () => {
   const fetchUsers = async () => {
     const token = localStorage.getItem('authToken');
     try {
-      const response = await axios.get<User[]>('http://localhost:8000/api/users/', {
+      const response = await axios.get<User[]>(`${API_BASE_URL}/api/users/`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUsers(response.data);
@@ -70,7 +73,7 @@ const AdminPage: React.FC = () => {
     const token = localStorage.getItem('authToken');
     try {
       await axios.patch(
-        `http://localhost:8000/api/users/${userId}/role/`,
+        `${API_BASE_URL}/api/users/${userId}/role/`,
         { is_staff: !currentRole },
         { headers: { Authorization: `Bearer ${token}` } }
       );

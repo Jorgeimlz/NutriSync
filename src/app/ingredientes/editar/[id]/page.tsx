@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
+import { API_BASE_URL } from '../../../../config/apiConfig';
 
 const unidadesDeMedida = [
   "Kilogramos",
@@ -35,7 +36,7 @@ const EditarIngrediente: React.FC = () => {
       if (id) {
         const token = localStorage.getItem('authToken');
         try {
-          const response = await axios.get<Ingrediente>(`http://127.0.0.1:8000/ingredientes/api/ingredientes/${id}/`, {
+          const response = await axios.get<Ingrediente>(`${API_BASE_URL}/ingredientes/api/ingredientes/${id}/`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -58,7 +59,7 @@ const EditarIngrediente: React.FC = () => {
     if (!ingrediente) return;
 
     try {
-      await axios.put(`http://127.0.0.1:8000/ingredientes/api/ingredientes/${id}/`, ingrediente, {
+      await axios.put(`${API_BASE_URL}/ingredientes/api/ingredientes/${id}/`, ingrediente, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -108,33 +109,32 @@ const EditarIngrediente: React.FC = () => {
         </div>
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">Unidad de Medida</label>
-
-      <select
-
-        value={ingrediente.unidad_medida}
-        onChange={(e) => setIngrediente({ ...ingrediente, unidad_medida: e.target.value })}
-        className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
-      >
-        {unidadesDeMedida.map((unidad) => (
-          <option key={unidad} value={unidad}>{unidad}</option>
-        ))}
-      </select>
+          <select
+            value={ingrediente.unidad_medida}
+            onChange={(e) => setIngrediente({ ...ingrediente, unidad_medida: e.target.value })}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+          >
+            {unidadesDeMedida.map((unidad) => (
+              <option key={unidad} value={unidad}>{unidad}</option>
+            ))}
+          </select>
+        </div>
+        <button
+          type="submit"
+          className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 rounded-md"
+        >
+          Actualizar
+        </button>
+        <button
+          type="button"
+          onClick={() => router.push('/ingredientes/lista')}
+          className="mt-2 w-full bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-2 rounded-md"
+        >
+          Cancelar
+        </button>
+      </form>
     </div>
-    <button
-      type="submit"
-      className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 rounded-md"
-    >
-      Actualizar
-    </button>
-    <button
-      type="button"
-      onClick={() => router.push('/ingredientes/lista')}
-      className="mt-2 w-full bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-2 rounded-md"
-    >
-      Cancelar
-    </button>
-  </form>
-</div>
-); };
+  );
+};
 
 export default EditarIngrediente;

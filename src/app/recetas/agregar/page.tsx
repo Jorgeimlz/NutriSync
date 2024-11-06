@@ -2,10 +2,11 @@
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../../../config/apiConfig'; // Importa la configuración de API
 
 type Ingrediente = {
-    id: number;   // ID del ingrediente
-    nombre: string; // Nombre del ingrediente
+    id: number;
+    nombre: string;
 };
 
 const AgregarReceta: React.FC = () => {
@@ -19,9 +20,9 @@ const AgregarReceta: React.FC = () => {
     useEffect(() => {
         const fetchIngredientes = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/api/recetas/ingredientes/', {
+                const response = await axios.get(`${API_BASE_URL}/recetas/ingredientes/`, { // Usa la URL de la API
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('authToken')}` // Asegúrate de que el token esté aquí
+                        Authorization: `Bearer ${localStorage.getItem('authToken')}`
                     },
                 });
                 setAllIngredientes(response.data);
@@ -36,15 +37,15 @@ const AgregarReceta: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8000/api/recetas/agregar/', {
+            const response = await axios.post(`${API_BASE_URL}/recetas/agregar/`, { // Usa la URL de la API
                 nombre,
                 descripcion,
-                ingredientes, // Aquí envías el array de IDs de ingredientes como string[]
+                ingredientes,
                 instrucciones,
                 tiempo_preparacion: tiempoPreparacion,
             }, {
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem('authToken')}` // Asegúrate de incluir el token aquí también
+                    Authorization: `Bearer ${localStorage.getItem('authToken')}`
                 },
             });
             console.log('Receta agregada:', response.data);
@@ -147,3 +148,4 @@ const AgregarReceta: React.FC = () => {
 };
 
 export default AgregarReceta;
+

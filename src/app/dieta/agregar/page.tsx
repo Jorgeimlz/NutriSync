@@ -4,6 +4,7 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../../../config/apiConfig';
 
 const AgregarDieta: React.FC = () => {
     const [nombre, setNombre] = useState('');
@@ -13,7 +14,7 @@ const AgregarDieta: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8000/api/dietas/agregar/', {
+            const response = await axios.post(`${API_BASE_URL}/api/dietas/agregar/`, {
                 nombre,
                 descripcion,
                 tipo,

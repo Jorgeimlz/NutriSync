@@ -1,9 +1,8 @@
-// src/app/planes-alimenticios/lista/page.tsx
-
 "use client";
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../../../config/apiConfig'; // Importa la configuración de API
 
 type PlanAlimenticio = {
     id: number;
@@ -19,7 +18,7 @@ const ListaPlanesAlimenticios: React.FC = () => {
         const fetchPlanes = async () => {
             const token = localStorage.getItem('authToken');
             try {
-                const response = await axios.get('http://localhost:8000/api/planes-alimenticios/', {
+                const response = await axios.get(`${API_BASE_URL}/planes-alimenticios/`, { // Usa la URL de la API
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -52,3 +51,4 @@ const ListaPlanesAlimenticios: React.FC = () => {
 };
 
 export default ListaPlanesAlimenticios;
+

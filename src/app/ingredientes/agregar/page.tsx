@@ -4,6 +4,7 @@
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../../../config/apiConfig';
 
 type Categoria = {
     id: number;   // ID de la categoría
@@ -26,7 +27,7 @@ const AgregarIngrediente: React.FC = () => {
             }
 
             try {
-                const response = await axios.get('http://localhost:8000/api/categorias/', {
+                const response = await axios.get(`${API_BASE_URL}/api/categorias/`, {
                     headers: {
                         Authorization: `Bearer ${token}`, // Envía el token en la cabecera
                     },
