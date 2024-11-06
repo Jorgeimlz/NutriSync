@@ -1,5 +1,3 @@
-// src/app/ingredientes/agregar/page.tsx
-
 "use client";
 
 import React, { useEffect, useState } from 'react';
@@ -20,7 +18,7 @@ const AgregarIngrediente: React.FC = () => {
 
     useEffect(() => {
         const fetchCategorias = async () => {
-            const token = localStorage.getItem('authToken'); // Asegúrate de que el token está aquí
+            const token = localStorage.getItem('authToken');
             if (!token) {
                 console.error('No se encontró el token de autenticación.');
                 return;
@@ -29,7 +27,7 @@ const AgregarIngrediente: React.FC = () => {
             try {
                 const response = await axios.get(`${API_BASE_URL}/api/categorias/`, {
                     headers: {
-                        Authorization: `Bearer ${token}`, // Envía el token en la cabecera
+                        Authorization: `Bearer ${token}`,
                     },
                 });
                 setCategorias(response.data);
@@ -43,21 +41,21 @@ const AgregarIngrediente: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const token = localStorage.getItem('authToken'); // Asegúrate de que el token está aquí
+        const token = localStorage.getItem('authToken');
         if (!token) {
             console.error('No se encontró el token de autenticación al enviar el formulario.');
             return;
         }
 
         try {
-            const response = await axios.post('http://localhost:8000/api/ingredientes/agregar/', {
+            const response = await axios.post(`${API_BASE_URL}/api/ingredientes/agregar/`, {
                 nombre,
                 cantidad_disponible: cantidadDisponible,
                 unidad_medida: unidadMedida,
-                categoria,  // Aquí envías el ID de la categoría seleccionada
+                categoria,
             }, {
                 headers: {
-                    Authorization: `Bearer ${token}`, // Envía el token en la cabecera
+                    Authorization: `Bearer ${token}`,
                 },
             });
             console.log('Ingrediente agregado:', response.data);
@@ -146,3 +144,4 @@ const AgregarIngrediente: React.FC = () => {
 };
 
 export default AgregarIngrediente;
+

@@ -21,7 +21,7 @@ type User = {
 };
 
 // Obtener la URL base desde las variables de entorno
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
 
 const AdminPage: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);

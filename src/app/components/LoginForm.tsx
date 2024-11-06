@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { API_BASE_URL } from '@/config/apiConfig'; // Asegúrate de que la ruta sea correcta
 
 const LoginForm: React.FC = () => {
   const [formData, setFormData] = useState({ username: '', password: '' });
@@ -15,7 +16,7 @@ const LoginForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/api/token/', {
+      const response = await axios.post(`${API_BASE_URL}/api/token/`, {
         username: formData.username,
         password: formData.password,
       });
@@ -24,7 +25,7 @@ const LoginForm: React.FC = () => {
       localStorage.setItem('authToken', token); // Almacena el token
 
       // Verifica si el usuario es administrador
-      const adminResponse = await axios.get('http://localhost:8000/api/users/check-admin/', {
+      const adminResponse = await axios.get(`${API_BASE_URL}/api/users/check-admin/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
