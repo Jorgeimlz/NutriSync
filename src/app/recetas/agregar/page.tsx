@@ -9,7 +9,7 @@ type Ingrediente = {
 };
 
 const AgregarReceta: React.FC = () => {
-    const [ingredientes, setIngredientes] = useState<string[]>([]); // Cambiar a string[]
+    const [ingredientes, setIngredientes] = useState<string[]>([]); // IDs de los ingredientes
     const [nombre, setNombre] = useState('');
     const [descripcion, setDescripcion] = useState('');
     const [instrucciones, setInstrucciones] = useState('');
@@ -120,14 +120,14 @@ const AgregarReceta: React.FC = () => {
                         multiple
                         value={ingredientes}
                         onChange={(e) => {
-                            const selectedValues = Array.from(e.target.selectedOptions, option => option.value); // Cambiar a string
+                            const selectedValues = Array.from(e.target.selectedOptions, option => option.value);
                             setIngredientes(selectedValues);
                         }}
                         required
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     >
                         {allIngredientes.map((ing) => (
-                            <option key={ing.id} value={ing.id.toString()}> {/* Convertir a string */}
+                            <option key={ing.id} value={ing.id.toString()}>
                                 {ing.nombre}
                             </option>
                         ))}

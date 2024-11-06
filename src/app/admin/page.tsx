@@ -35,9 +35,7 @@ const AdminPage: React.FC = () => {
 
       try {
         const response = await axios.get('http://localhost:8000/api/users/check-admin/', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         if (!response.data.is_admin) {
@@ -58,9 +56,7 @@ const AdminPage: React.FC = () => {
     const token = localStorage.getItem('authToken');
     try {
       const response = await axios.get<User[]>('http://localhost:8000/api/users/', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
       setUsers(response.data);
       setIsLoading(false);
@@ -76,11 +72,7 @@ const AdminPage: React.FC = () => {
       await axios.patch(
         `http://localhost:8000/api/users/${userId}/role/`,
         { is_staff: !currentRole },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       setUsers(users.map(user => (user.id === userId ? { ...user, is_staff: !currentRole } : user)));
     } catch (error) {
@@ -106,46 +98,99 @@ const AdminPage: React.FC = () => {
           Cerrar Sesión
         </button>
       </div>
-      
+
+      {/* Botones de Gestión */}
       <div className="mb-4">
-        <button
-          onClick={() => router.push('/ingredientes/lista')}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
-        >
-          Gestionar Ingredientes
-        </button>
-        <button
-          onClick={() => router.push('/ingredientes/agregar')}
-          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Agregar Ingrediente
-        </button>
-        <button
-          onClick={() => router.push('/categorias/lista')}
-          className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded ml-2"
-        >
-          Gestionar Categorías
-        </button>
-        <button
-          onClick={() => router.push('/categorias/agregar')}
-          className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded ml-2"
-        >
-          Agregar Categoría
-        </button>
-        <button
-          onClick={() => router.push('/recetas/lista')}
-          className="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded ml-2"
-        >
-          Gestionar Recetas
-        </button>
-        <button
-          onClick={() => router.push('/recetas/agregar')}
-          className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded ml-2"
-        >
-          Agregar Receta
-        </button>
+        <h2 className="text-2xl font-bold mb-2">Gestión de Ingredientes</h2>
+        <div className="flex flex-wrap">
+          <button
+            onClick={() => router.push('/ingredientes/lista')}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2 mb-2"
+          >
+            Ver Ingredientes
+          </button>
+          <button
+            onClick={() => router.push('/ingredientes/agregar')}
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mb-2"
+          >
+            Agregar Ingrediente
+          </button>
+        </div>
       </div>
 
+      <div className="mb-4">
+        <h2 className="text-2xl font-bold mb-2">Gestión de Categorías</h2>
+        <div className="flex flex-wrap">
+          <button
+            onClick={() => router.push('/categorias/lista')}
+            className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mr-2 mb-2"
+          >
+            Ver Categorías
+          </button>
+          <button
+            onClick={() => router.push('/categorias/agregar')}
+            className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded mb-2"
+          >
+            Agregar Categoría
+          </button>
+        </div>
+      </div>
+
+      <div className="mb-4">
+        <h2 className="text-2xl font-bold mb-2">Gestión de Recetas</h2>
+        <div className="flex flex-wrap">
+          <button
+            onClick={() => router.push('/recetas/lista')}
+            className="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded mr-2 mb-2"
+          >
+            Ver Recetas
+          </button>
+          <button
+            onClick={() => router.push('/recetas/agregar')}
+            className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded mb-2"
+          >
+            Agregar Receta
+          </button>
+        </div>
+      </div>
+
+      <div className="mb-4">
+        <h2 className="text-2xl font-bold mb-2">Gestión de Dietas</h2>
+        <div className="flex flex-wrap">
+          <button
+            onClick={() => router.push('/dieta/lista')}
+            className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mr-2 mb-2"
+          >
+            Ver Dietas
+          </button>
+          <button
+            onClick={() => router.push('/dieta/agregar')}
+            className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded mb-2"
+          >
+            Agregar Dieta
+          </button>
+        </div>
+      </div>
+
+      <div className="mb-4">
+        <h2 className="text-2xl font-bold mb-2">Gestión de Planes Alimenticios</h2>
+        <div className="flex flex-wrap">
+          <button
+            onClick={() => router.push('/planes-alimenticios/lista')}
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2 mb-2"
+          >
+            Ver Planes Alimenticios
+          </button>
+          <button
+            onClick={() => router.push('/planes-alimenticios/agregar')}
+            className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mb-2"
+          >
+            Agregar Plan Alimenticio
+          </button>
+        </div>
+      </div>
+
+      {/* Lista de Usuarios */}
       <p className="text-lg mb-4">Lista de Usuarios</p>
       <table className="table-auto border-collapse border border-gray-300 w-full bg-white rounded-lg shadow-md">
         <thead>
