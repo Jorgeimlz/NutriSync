@@ -1,9 +1,10 @@
-"use client";
+"use client"; // Asegúrate de que esta línea esté presente
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
+// Define el tipo para los usuarios
 type User = {
   id: number;
   username: string;
@@ -21,20 +22,18 @@ type User = {
 
 const AdminPage: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
-  const [isLoading, setIsLoading] = useState(true); // Controla la carga de la página
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     const checkAdminStatus = async () => {
       const token = localStorage.getItem('authToken');
       if (!token) {
-        // Si no hay token, redirige al login
         router.push('/login');
         return;
       }
 
       try {
-        // Verifica si el usuario es administrador
         const response = await axios.get('http://localhost:8000/api/users/check-admin/', {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -42,11 +41,9 @@ const AdminPage: React.FC = () => {
         });
 
         if (!response.data.is_admin) {
-          // Si el usuario no es administrador, redirige a no-access
-          router.push('/no-access');
+          router.push('/welcome'); // Redirigir a la página de bienvenida si no es admin
         } else {
-          setIsLoading(false); // Usuario es administrador, muestra la página
-          fetchUsers(); // Carga los usuarios
+          fetchUsers();
         }
       } catch (error) {
         console.error('Error verificando el rol de administrador:', error);
@@ -66,6 +63,7 @@ const AdminPage: React.FC = () => {
         },
       });
       setUsers(response.data);
+      setIsLoading(false);
     } catch (error) {
       console.error('Error al cargar usuarios:', error);
       alert('No tienes permisos para ver esta información.');
@@ -108,6 +106,46 @@ const AdminPage: React.FC = () => {
           Cerrar Sesión
         </button>
       </div>
+      
+      <div className="mb-4">
+        <button
+          onClick={() => router.push('/ingredientes/lista')}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+        >
+          Gestionar Ingredientes
+        </button>
+        <button
+          onClick={() => router.push('/ingredientes/agregar')}
+          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Agregar Ingrediente
+        </button>
+        <button
+          onClick={() => router.push('/categorias/lista')}
+          className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded ml-2"
+        >
+          Gestionar Categorías
+        </button>
+        <button
+          onClick={() => router.push('/categorias/agregar')}
+          className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded ml-2"
+        >
+          Agregar Categoría
+        </button>
+        <button
+          onClick={() => router.push('/recetas/lista')}
+          className="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded ml-2"
+        >
+          Gestionar Recetas
+        </button>
+        <button
+          onClick={() => router.push('/recetas/agregar')}
+          className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded ml-2"
+        >
+          Agregar Receta
+        </button>
+      </div>
+
       <p className="text-lg mb-4">Lista de Usuarios</p>
       <table className="table-auto border-collapse border border-gray-300 w-full bg-white rounded-lg shadow-md">
         <thead>
@@ -127,9 +165,7 @@ const AdminPage: React.FC = () => {
               <td className="py-3 px-6 text-center space-x-2">
                 <button
                   onClick={() => toggleUserRole(user.id, user.is_staff)}
-                  className={`py-2 px-4 rounded ${
-                    user.is_staff ? 'bg-red-500 hover:bg-red-700' : 'bg-blue-500 hover:bg-blue-700'
-                  } text-white`}
+                  className={`py-2 px-4 rounded ${user.is_staff ? 'bg-red-500 hover:bg-red-700' : 'bg-blue-500 hover:bg-blue-700'} text-white`}
                 >
                   {user.is_staff ? 'Cambiar a Usuario' : 'Cambiar a Administrador'}
                 </button>

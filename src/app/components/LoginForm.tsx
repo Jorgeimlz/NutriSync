@@ -20,10 +20,21 @@ const LoginForm: React.FC = () => {
         password: formData.password,
       });
 
-      const token = response.data.access;
-      localStorage.setItem('authToken', token);
+      const token = response.data.access; // Obtén el token
+      localStorage.setItem('authToken', token); // Almacena el token
 
-      router.push('/admin');
+      // Verifica si el usuario es administrador
+      const adminResponse = await axios.get('http://localhost:8000/api/users/check-admin/', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (adminResponse.data.is_admin) {
+        router.push('/admin'); // Redirige a la página de administración
+      } else {
+        router.push('/welcome'); // Redirige a la página de bienvenida
+      }
     } catch (error) {
       console.error('Error en el inicio de sesión:', error);
       alert("Credenciales inválidas");
