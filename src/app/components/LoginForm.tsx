@@ -22,6 +22,7 @@ const LoginForm: React.FC = () => {
       });
 
       const token = response.data.access; // Obtén el token
+      console.log('Token recibido:', token); // Verifica el token
       localStorage.setItem('authToken', token); // Almacena el token
 
       // Verifica si el usuario es administrador
@@ -31,9 +32,13 @@ const LoginForm: React.FC = () => {
         },
       });
 
+      console.log('Respuesta de admin:', adminResponse.data); // Verifica la respuesta del admin
+
       if (adminResponse.data.is_admin) {
+        console.log('Usuario es administrador');
         router.push('/admin'); // Redirige a la página de administración
       } else {
+        console.log('Usuario no es administrador');
         router.push('/welcome'); // Redirige a la página de bienvenida
       }
     } catch (error) {
@@ -41,6 +46,7 @@ const LoginForm: React.FC = () => {
       alert("Credenciales inválidas");
     }
   };
+
 
   return (
     <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
