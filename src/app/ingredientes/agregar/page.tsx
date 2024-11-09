@@ -5,12 +5,18 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
 
+// Definir el tipo de las categorías
+type Categoria = {
+  id: number;
+  nombre: string;
+};
+
 const AgregarIngrediente: React.FC = () => {
   const [nombre, setNombre] = useState('');
   const [cantidadDisponible, setCantidadDisponible] = useState(0);
   const [unidadMedida, setUnidadMedida] = useState('');
   const [categoria, setCategoria] = useState('');
-  const [categorias, setCategorias] = useState([]);
+  const [categorias, setCategorias] = useState<Categoria[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -99,7 +105,7 @@ const AgregarIngrediente: React.FC = () => {
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           >
             <option value="" disabled>Seleccionar categoría</option>
-            {categorias.map((cat: any) => (
+            {categorias.map((cat) => (
               <option key={cat.id} value={cat.id}>{cat.nombre}</option>
             ))}
           </select>
