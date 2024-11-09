@@ -1,6 +1,6 @@
 // src/config/apiConfig.ts
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const BASE_URL = 'https://62dc-181-198-15-238.ngrok-free.app';
 
 export const API_ENDPOINTS = {
 
