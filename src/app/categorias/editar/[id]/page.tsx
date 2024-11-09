@@ -2,9 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
-import { useParams } from 'next/navigation';
-import { API_BASE_URL } from '../../../../config/apiConfig';
+import { useRouter, useParams } from 'next/navigation';
+import { API_ENDPOINTS } from '../../../../config/apiConfig';
 
 const EditarCategoria: React.FC = () => {
   const [nombre, setNombre] = useState('');
@@ -13,19 +12,17 @@ const EditarCategoria: React.FC = () => {
 
   useEffect(() => {
     const fetchCategoria = async () => {
-      if (id) {
-        const token = localStorage.getItem('authToken');
-        try {
-          const response = await axios.get(`${API_BASE_URL}/categorias/api/${id}/`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          setNombre(response.data.nombre);
-        } catch (error) {
-          console.error('Error al obtener categoría:', error);
-          alert('Error al cargar los detalles de la categoría.');
-        }
+      const token = localStorage.getItem('authToken');
+      try {
+        const response = await axios.get(API_ENDPOINTS.CATEGORIAS_DETALLE(id), {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setNombre(response.data.nombre);
+      } catch (error) {
+        console.error('Error al obtener categoría:', error);
+        alert('Error al cargar los detalles de la categoría.');
       }
     };
 
@@ -37,20 +34,21 @@ const EditarCategoria: React.FC = () => {
     const token = localStorage.getItem('authToken');
 
     try {
-      await axios.put(`${API_BASE_URL}/categorias/api/${id}/`, {
-        nombre,
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      await axios.put(
+        API_ENDPOINTS.CATEGORIAS_DETALLE(id),
+        { nombre },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
+      );
       router.push('/categorias/lista');
     } catch (error) {
       console.error('Error al actualizar categoría:', error);
       alert('Error al actualizar la categoría.');
     }
   };
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
       <h1 className="text-3xl font-bold mb-6">Editar Categoría</h1>

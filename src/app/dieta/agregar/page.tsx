@@ -4,35 +4,33 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
-import { API_BASE_URL } from '../../../config/apiConfig';
+import { API_ENDPOINTS } from '../../../config/apiConfig';
 
 const AgregarDieta: React.FC = () => {
-    const [nombre, setNombre] = useState('');
-    const [descripcion, setDescripcion] = useState('');
-    const [tipo, setTipo] = useState('');
+  const [nombre, setNombre] = useState('');
+  const [descripcion, setDescripcion] = useState('');
+  const [tipo, setTipo] = useState('');
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        try {
-            const response = await axios.post(`${API_BASE_URL}/api/dietas/agregar/`, {
-                nombre,
-                descripcion,
-                tipo,
-            }, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('authToken')}`
-                },
-            });
-            console.log('Dieta agregada:', response.data);
-            // Resetear el formulario
-            setNombre('');
-            setDescripcion('');
-            setTipo('');
-        } catch (error) {
-            console.error('Error al agregar dieta:', error);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        API_ENDPOINTS.DIETAS_AGREGAR,
+        { nombre, descripcion, tipo },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+          },
         }
-    };
-
+      );
+      console.log('Dieta agregada:', response.data);
+      setNombre('');
+      setDescripcion('');
+      setTipo('');
+    } catch (error) {
+      console.error('Error al agregar dieta:', error);
+    }
+  };
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
             <h1 className="text-2xl font-bold mb-6">Agregar Dieta</h1>

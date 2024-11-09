@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { API_BASE_URL } from '@/config/apiConfig'; // Asegúrate de que la ruta sea correcta
+import { API_ENDPOINTS } from '../../config/apiConfig'; 
 
 const LoginForm: React.FC = () => {
   const [formData, setFormData] = useState({ username: '', password: '' });
@@ -16,7 +16,7 @@ const LoginForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/token/`, {
+      const response = await axios.post(API_ENDPOINTS.AUTH_TOKEN, {
         username: formData.username,
         password: formData.password,
       });
@@ -25,7 +25,7 @@ const LoginForm: React.FC = () => {
       localStorage.setItem('authToken', token); // Almacena el token
 
       // Verifica si el usuario es administrador
-      const adminResponse = await axios.get(`${API_BASE_URL}/api/users/check-admin/`, {
+      const adminResponse = await axios.get(API_ENDPOINTS.CHECK_ADMIN, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

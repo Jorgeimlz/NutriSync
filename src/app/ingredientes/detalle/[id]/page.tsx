@@ -1,10 +1,9 @@
-"use client"; // Asegúrate de que esta línea esté presente
+"use client";
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
-import { useParams } from 'next/navigation';
-import { API_BASE_URL } from '../../../../config/apiConfig';
+import { useRouter, useParams } from 'next/navigation';
+import { API_ENDPOINTS } from '../../../../config/apiConfig';
 
 interface Ingrediente {
   id: number;
@@ -21,19 +20,22 @@ const DetalleIngrediente: React.FC = () => {
 
   useEffect(() => {
     const fetchIngrediente = async () => {
-      if (id) {
-        const token = localStorage.getItem('authToken');
-        try {
-          const response = await axios.get<Ingrediente>(`${API_BASE_URL}/ingredientes/api/ingredientes/${id}/`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          setIngrediente(response.data);
-        } catch (error) {
-          console.error('Error al obtener ingrediente:', error);
-          alert('Error al cargar los detalles del ingrediente.');
-        }
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        console.error('No se encontró el token');
+        return;
+      }
+
+      try {
+        const response = await axios.get<Ingrediente>(API_ENDPOINTS.INGREDIENTES_DETALLE(id), {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setIngrediente(response.data);
+      } catch (error) {
+        console.error('Error al obtener ingrediente:', error);
+        alert('Error al cargar los detalles del ingrediente.');
       }
     };
 
@@ -62,3 +64,5 @@ const DetalleIngrediente: React.FC = () => {
 };
 
 export default DetalleIngrediente;
+
+

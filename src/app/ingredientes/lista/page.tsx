@@ -1,9 +1,9 @@
-"use client"; // Asegúrate de que esta línea esté presente
+"use client";
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { API_BASE_URL } from '../../../config/apiConfig';
+import { API_ENDPOINTS } from '../../../config/apiConfig';
 
 interface Ingrediente {
   id: number;
@@ -22,7 +22,7 @@ const ListaIngredientes: React.FC = () => {
     const fetchIngredientes = async () => {
       const token = localStorage.getItem('authToken');
       try {
-        const response = await axios.get<Ingrediente[]>(`${API_BASE_URL}/ingredientes/api/ingredientes/`, {
+        const response = await axios.get<Ingrediente[]>(API_ENDPOINTS.INGREDIENTES, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -83,3 +83,4 @@ const ListaIngredientes: React.FC = () => {
 };
 
 export default ListaIngredientes;
+

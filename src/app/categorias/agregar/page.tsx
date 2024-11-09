@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { API_BASE_URL } from '../../../config/apiConfig';
+import { API_ENDPOINTS } from '../../../config/apiConfig';
 
 const AgregarCategoria: React.FC = () => {
   const [nombre, setNombre] = useState('');
@@ -14,20 +14,21 @@ const AgregarCategoria: React.FC = () => {
     const token = localStorage.getItem('authToken');
 
     try {
-      await axios.post(`${API_BASE_URL}/categorias/api/crear/`, {
-        nombre,
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      await axios.post(
+        API_ENDPOINTS.CATEGORIAS_CREAR,
+        { nombre },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
         }
-      });
+      );
       router.push('/categorias/lista');
     } catch (error) {
       console.error('Error al agregar categoría:', error);
       alert('Error al agregar categoría. Verifica tus credenciales.');
     }
   };
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
       <h1 className="text-3xl font-bold mb-6">Agregar Categoría</h1>

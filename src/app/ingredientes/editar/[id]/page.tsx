@@ -1,54 +1,47 @@
-"use client"; // Asegúrate de que esta línea esté presente
+"use client";
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
-import { useParams } from 'next/navigation';
-import { API_BASE_URL } from '../../../../config/apiConfig';
-
-const unidadesDeMedida = [
-  "Kilogramos",
-  "Gramos",
-  "Litros",
-  "Mililitros",
-  "Tazas",
-  "Cucharadas",
-  "Cucharaditas",
-  "Piezas",
-  "Unidades"
-];
-
-interface Ingrediente {
-  id: number;
-  nombre: string;
-  categoria: string;
-  cantidad_disponible: number;
-  unidad_medida: string;
-}
+import { useRouter, useParams } from 'next/navigation';
+import { API_ENDPOINTS } from '../../../../config/apiConfig';
 
 const EditarIngrediente: React.FC = () => {
-  const [ingrediente, setIngrediente] = useState<Ingrediente | null>(null);
+  const [nombre, setNombre] = useState('');
+  const [cantidadDisponible, setCantidadDisponible] = useState(0);
+  const [unidadMedida, setUnidadMedida] = useState('');
+  const [categoria, setCategoria] = useState('');
+  const [categorias, setCategorias] = useState([]);
   const router = useRouter();
   const { id } = useParams() as { id: string };
 
   useEffect(() => {
-    const fetchIngrediente = async () => {
-      if (id) {
-        const token = localStorage.getItem('authToken');
-        try {
-          const response = await axios.get<Ingrediente>(`${API_BASE_URL}/ingredientes/api/ingredientes/${id}/`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          setIngrediente(response.data);
-        } catch (error) {
-          console.error('Error al obtener ingrediente:', error);
-          alert('Error al cargar los detalles del ingrediente.');
-        }
+    const fetchCategorias = async () => {
+      try {
+        const response = await axios.get(API_ENDPOINTS.CATEGORIAS);
+        setCategorias(response.data);
+      } catch (error) {
+        console.error('Error al cargar categorías:', error);
       }
     };
 
+    const fetchIngrediente = async () => {
+      const token = localStorage.getItem('authToken');
+      try {
+        const response = await axios.get(API_ENDPOINTS.INGREDIENTES_DETALLE(id), {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const { nombre, cantidad_disponible, unidad_medida, categoria } = response.data;
+        setNombre(nombre);
+        setCantidadDisponible(cantidad_disponible);
+        setUnidadMedida(unidad_medida);
+        setCategoria(categoria);
+      } catch (error) {
+        console.error('Error al obtener ingrediente:', error);
+        alert('Error al cargar los detalles del ingrediente.');
+      }
+    };
+
+    fetchCategorias();
     fetchIngrediente();
   }, [id]);
 
@@ -56,22 +49,18 @@ const EditarIngrediente: React.FC = () => {
     e.preventDefault();
     const token = localStorage.getItem('authToken');
 
-    if (!ingrediente) return;
-
     try {
-      await axios.put(`${API_BASE_URL}/ingredientes/api/ingredientes/${id}/`, ingrediente, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.put(
+        API_ENDPOINTS.INGREDIENTES_DETALLE(id),
+        { nombre, cantidad_disponible: cantidadDisponible, unidad_medida: unidadMedida, categoria },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       router.push('/ingredientes/lista');
     } catch (error) {
       console.error('Error al actualizar ingrediente:', error);
       alert('Error al actualizar el ingrediente.');
     }
   };
-
-  if (!ingrediente) return <div>Cargando...</div>;
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
@@ -81,18 +70,8 @@ const EditarIngrediente: React.FC = () => {
           <label className="block text-sm font-medium text-gray-700">Nombre</label>
           <input
             type="text"
-            value={ingrediente.nombre}
-            onChange={(e) => setIngrediente({ ...ingrediente, nombre: e.target.value })}
-            required
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Categoría</label>
-          <input
-            type="text"
-            value={ingrediente.categoria}
-            onChange={(e) => setIngrediente({ ...ingrediente, categoria: e.target.value })}
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
             required
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
           />
@@ -101,37 +80,44 @@ const EditarIngrediente: React.FC = () => {
           <label className="block text-sm font-medium text-gray-700">Cantidad Disponible</label>
           <input
             type="number"
-            value={ingrediente.cantidad_disponible}
-            onChange={(e) => setIngrediente({ ...ingrediente, cantidad_disponible: Number(e.target.value) })}
+            value={cantidadDisponible}
+            onChange={(e) => setCantidadDisponible(Number(e.target.value))}
             required
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
           />
         </div>
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">Unidad de Medida</label>
+          <input
+            type="text"
+            value={unidadMedida}
+            onChange={(e) => setUnidadMedida(e.target.value)}
+            required
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+          />
+        </div>
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700">Categoría</label>
           <select
-            value={ingrediente.unidad_medida}
-            onChange={(e) => setIngrediente({ ...ingrediente, unidad_medida: e.target.value })}
+            value={categoria}
+            onChange={(e) => setCategoria(e.target.value)}
+            required
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
           >
-            {unidadesDeMedida.map((unidad) => (
-              <option key={unidad} value={unidad}>{unidad}</option>
+            <option value="" disabled>Seleccionar categoría</option>
+            {categorias.map((cat: any) => (
+              <option key={cat.id} value={cat.id}>{cat.nombre}</option>
             ))}
           </select>
         </div>
-        <button
-          type="submit"
-          className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 rounded-md"
-        >
-          Actualizar
-        </button>
-        <button
-          type="button"
-          onClick={() => router.push('/ingredientes/lista')}
-          className="mt-2 w-full bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-2 rounded-md"
-        >
-          Cancelar
-        </button>
+        <div className="flex items-center justify-between">
+          <button
+            type="submit"
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 rounded-md"
+          >
+            Actualizar
+          </button>
+        </div>
       </form>
     </div>
   );

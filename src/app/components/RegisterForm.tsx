@@ -1,9 +1,10 @@
+// NutriSync/frontend/src/components/RegisterForm.tsx
 "use client";
 
 import React, { useState } from 'react';
 import FormInput from './FormInput';
 import axios from 'axios';
-import { API_BASE_URL } from '@/config/apiConfig'; // Asegúrate de que la ruta sea correcta
+import { API_ENDPOINTS } from '../../config/apiConfig';
 
 const RegisterForm: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -28,7 +29,8 @@ const RegisterForm: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/users/register/`, formData);
+      // Endpoint de registro
+      const response = await axios.post(API_ENDPOINTS.REGISTER, formData);
       console.log('Registro exitoso:', response.data);
     } catch (error) {
       console.error('Error en el registro:', error);

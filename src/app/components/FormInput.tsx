@@ -1,11 +1,12 @@
+// NutriSync/frontend/src/components/FormInput.tsx
 import React from 'react';
 
 interface FormInputProps {
   label: string;
   type: string;
-  name: string; // Agrega el nombre aquí
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  name: string;
+  value: string | number;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
 }
 
 const FormInput: React.FC<FormInputProps> = ({ label, type, name, value, onChange }) => {
@@ -28,4 +29,3 @@ const FormInput: React.FC<FormInputProps> = ({ label, type, name, value, onChang
 };
 
 export default FormInput;
-

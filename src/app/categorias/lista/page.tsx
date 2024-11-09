@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { API_BASE_URL } from '../../../config/apiConfig';
+import { API_ENDPOINTS } from '../../../config/apiConfig';
 
 interface Categoria {
   id: number;
@@ -19,7 +19,7 @@ const ListaCategorias: React.FC = () => {
     const fetchCategorias = async () => {
       const token = localStorage.getItem('authToken');
       try {
-        const response = await axios.get<Categoria[]>(`${API_BASE_URL}/categorias/api/`, {
+        const response = await axios.get<Categoria[]>(API_ENDPOINTS.CATEGORIAS, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -33,6 +33,22 @@ const ListaCategorias: React.FC = () => {
 
     fetchCategorias();
   }, []);
+
+  const handleDelete = async (id: number) => {
+    const confirmed = confirm('¿Estás seguro de que deseas eliminar esta categoría?');
+    if (!confirmed) return;
+
+    const token = localStorage.getItem('authToken');
+    try {
+      await axios.delete(API_ENDPOINTS.CATEGORIAS_DETALLE(id), {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setCategorias(categorias.filter(categoria => categoria.id !== id));
+    } catch (error) {
+      console.error('Error al eliminar categoría:', error);
+      alert('Error al eliminar la categoría.');
+    }
+  };
 
   if (isLoading) return <div>Cargando...</div>;
 
@@ -58,7 +74,7 @@ const ListaCategorias: React.FC = () => {
                   Editar
                 </button>
                 <button
-                  onClick={() => alert('Funcionalidad de eliminar')}
+                  onClick={() => handleDelete(categoria.id)}
                   className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded ml-2"
                 >
                   Eliminar
@@ -73,3 +89,5 @@ const ListaCategorias: React.FC = () => {
 };
 
 export default ListaCategorias;
+
+

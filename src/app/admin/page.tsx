@@ -1,10 +1,10 @@
-"use client"; // Asegúrate de que esta línea esté presente
+"use client";
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { API_ENDPOINTS } from '../../config/apiConfig';
 
-// Define el tipo para los usuarios
 type User = {
   id: number;
   username: string;
@@ -20,9 +20,6 @@ type User = {
   dietary_goal?: string;
 };
 
-// Obtener la URL base desde las variables de entorno
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
-
 const AdminPage: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -37,12 +34,12 @@ const AdminPage: React.FC = () => {
       }
 
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/users/check-admin/`, {
+        const response = await axios.get(API_ENDPOINTS.CHECK_ADMIN, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
         if (!response.data.is_admin) {
-          router.push('/welcome'); // Redirigir a la página de bienvenida si no es admin
+          router.push('/welcome');
         } else {
           fetchUsers();
         }
@@ -58,7 +55,7 @@ const AdminPage: React.FC = () => {
   const fetchUsers = async () => {
     const token = localStorage.getItem('authToken');
     try {
-      const response = await axios.get<User[]>(`${API_BASE_URL}/api/users/`, {
+      const response = await axios.get<User[]>(API_ENDPOINTS.USERS, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUsers(response.data);
@@ -73,13 +70,34 @@ const AdminPage: React.FC = () => {
     const token = localStorage.getItem('authToken');
     try {
       await axios.patch(
-        `${API_BASE_URL}/api/users/${userId}/role/`,
+        `${API_ENDPOINTS.USERS}${userId}/role/`,
         { is_staff: !currentRole },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setUsers(users.map(user => (user.id === userId ? { ...user, is_staff: !currentRole } : user)));
     } catch (error) {
       console.error('Error al cambiar el rol del usuario:', error);
+    }
+  };
+
+  const editUser = (userId: number) => {
+    router.push(`/admin/users/editar/${userId}`);
+  };
+
+  const deleteUser = async (userId: number) => {
+    const token = localStorage.getItem('authToken');
+    const confirmed = confirm('¿Estás seguro de que deseas eliminar este usuario?');
+    if (!confirmed) return;
+
+    try {
+      await axios.delete(`${API_ENDPOINTS.USERS}${userId}/delete/`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUsers(users.filter(user => user.id !== userId));
+      alert('Usuario eliminado correctamente');
+    } catch (error) {
+      console.error('Error al eliminar usuario:', error);
+      alert('Error al eliminar el usuario.');
     }
   };
 
@@ -216,6 +234,18 @@ const AdminPage: React.FC = () => {
                   className={`py-2 px-4 rounded ${user.is_staff ? 'bg-red-500 hover:bg-red-700' : 'bg-blue-500 hover:bg-blue-700'} text-white`}
                 >
                   {user.is_staff ? 'Cambiar a Usuario' : 'Cambiar a Administrador'}
+                </button>
+                <button
+                  onClick={() => editUser(user.id)}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded"
+                >
+                  Editar
+                </button>
+                <button
+                  onClick={() => deleteUser(user.id)}
+                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+                >
+                  Eliminar
                 </button>
               </td>
             </tr>
