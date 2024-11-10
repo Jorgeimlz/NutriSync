@@ -39,6 +39,7 @@ const LoginForm: React.FC = () => {
         router.push('/admin'); // Redirige a la página de administración
       } else {
         console.log('Usuario no es administrador');
+        router.push('/welcome'); // Redirige a la página de bienvenida
       }
     } catch (error) {
       console.error('Error en el inicio de sesión:', error);

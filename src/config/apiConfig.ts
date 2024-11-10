@@ -1,6 +1,6 @@
 // src/config/apiConfig.ts
 
-const BASE_URL = 'https://aafb-181-198-15-238.ngrok-free.app';
+const BASE_URL = 'https://backend-9el7.onrender.com';
 
 export const API_ENDPOINTS = {
 
